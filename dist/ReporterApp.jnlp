@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="ReporterApp.jnlp">
+  <information>
+    <title>ReporterApp</title>
+    <vendor>bipin</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="ReporterApp.jar" size="1059702" download="eager" />
+    <jar href="lib/commons-io-2.4.jar" size="185140" download="eager" />
+    <jar href="lib/jackson-annotations-2.5.4.jar" size="39822" download="eager" />
+    <jar href="lib/jackson-core-2.5.4 (1).jar" size="229999" download="eager" />
+    <jar href="lib/jackson-core-2.5.4.jar" size="229999" download="eager" />
+    <jar href="lib/jackson-databind-2.5.4.jar" size="1144035" download="eager" />
+    <jar href="lib/okhttp-3.0.0-RC1.jar" size="326383" download="eager" />
+    <jar href="lib/okio-1.14.1.jar" size="85773" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="ReporterApp" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="com.sbl.elegislature.login.UserLogin"  name="ReporterApp" />
+  <update check="always"/>
+</jnlp>
