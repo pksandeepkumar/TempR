@@ -122,6 +122,10 @@ public class LeftSideDockbar extends BorderPane {
                 public void handle(ActionEvent e) {
                     
                     SessionData selectedSession = (SessionData) comboSessionList.getValue();
+                    if(selectedSession == null) {
+                        AppContext.selectedSessionId = 0;
+                        return;
+                    }
                     ObservableList<SessionDateData> sessionDateList = loadSessionDates(selectedSession.getId());
                     LOG.log("selectedSession:" + selectedSession.getSessionName()
                             + " ID:" + selectedSession.getId());
@@ -140,6 +144,10 @@ public class LeftSideDockbar extends BorderPane {
                 public void handle(ActionEvent e) {
                     
                     SessionDateData selectedSessionDate = (SessionDateData) comboSessionDates.getValue();
+                    if(selectedSessionDate == null){
+                        AppContext.selectedSessionDateId = 0;
+                        return;
+                    }
                     LOG.log("selectedSessionDate:" + selectedSessionDate.getSessionDate()
                             + " ID:" + selectedSessionDate.getId());
                     AppContext.selectedSessionDateId = selectedSessionDate.getId();
@@ -159,6 +167,9 @@ public class LeftSideDockbar extends BorderPane {
                     = new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
                     LanguageData selectedLanguage = (LanguageData) comboLanguages.getValue();
+                    if(selectedLanguage == null) {
+                        AppContext.selectedLanguageId = 0;
+                    }
                     
                     AppContext.selectedLanguageId = selectedLanguage.getId();
                     

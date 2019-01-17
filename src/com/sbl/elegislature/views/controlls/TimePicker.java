@@ -5,6 +5,10 @@
  */
 package com.sbl.elegislature.views.controlls;
 
+import com.sbl.elegislature.models.pojo.group_member.Data;
+import com.sbl.elegislature.util.ReporterUtility;
+import java.sql.Time;
+import java.util.Date;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +25,9 @@ public class TimePicker extends HBox {
     TextField tvTime;
     Button btnAmPm;
     ChangeListener changeListener;
+    
+    int hour;
+    int minute;
     
 
     public static final String AM = "AM";
@@ -41,6 +48,9 @@ public class TimePicker extends HBox {
         
         changeListener = (observable, oldValue, newValue) -> {
             setTimeText(formatValue((String)newValue, (String) oldValue));
+            if(isValidTime()) {
+                loadTimeValue();
+            }
         }; 
 
         tvTime.textProperty().addListener(changeListener);
@@ -59,6 +69,14 @@ public class TimePicker extends HBox {
             
     }
     
+    private void loadTimeValue() {
+        String[] arrSplit = getTime().split(":");
+        if(arrSplit.length >= 2) {
+            hour = ReporterUtility.parseInt(arrSplit[0]);
+            minute = ReporterUtility.parseInt(arrSplit[1]);
+        }
+    }
+    
     private void setTimeText(String str) {
         tvTime.textProperty().removeListener(changeListener);
             tvTime.setText(str);
@@ -66,8 +84,33 @@ public class TimePicker extends HBox {
     }
     
     public void setTime(int hour, int minute, String amPm) {
-        setTimeText(setPadding(hour) + ":" + setPadding(minute));
+        this.hour = hour;
+        this.minute = minute;
+        
         btnAmPm.setText(amPm);
+        if(hour >= 12) {
+            this.hour = hour - 12;
+            btnAmPm.setText(PM);
+        }
+        setTimeText(setPadding(hour) + ":" + setPadding(minute));
+    }
+    
+    public void setTime(int hour, int minute) {
+        
+        this.hour = hour;
+        this.minute = minute;
+        
+        if(minute >= 60 ) {
+            minute = minute - 60;
+            hour++;
+        }
+        
+        btnAmPm.setText(AM);
+        if(hour >= 12) {
+            this.hour = hour - 12;
+            btnAmPm.setText(PM);
+        }
+        setTimeText(setPadding(hour) + ":" + setPadding(minute));
     }
     
     public String setPadding( int value) {
@@ -84,6 +127,25 @@ public class TimePicker extends HBox {
     
     public String getTime() {
         return tvTime.getText();
+    }
+    
+    public int getHour() {
+        return hour;
+    }
+    
+    public int getMinute() {
+        return minute;
+    }
+    
+    public Date getDateObject() {
+        Date date = new Date();
+        if(btnAmPm.getText().equals(PM)) {
+            date.setHours(hour + 11);
+        } else {
+            date.setHours(hour - 1);
+        }
+        date.setMinutes(minute - 1);
+        return date;
     }
     
     public String getAmPm() {

@@ -12,7 +12,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author sandeep
  */
-public class SBorderPane extends BorderPane {
+public class SBorderPane extends BaseWindow {
 
     public void setWidth(int width) {
         setPrefWidth(width);
@@ -37,6 +37,11 @@ public class SBorderPane extends BorderPane {
 
     public void setPaddingBottom(int padding) {
         setPadding(new Insets(0, 0, padding, 0));
+    }
+
+    @Override
+    public void refreshWindow() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

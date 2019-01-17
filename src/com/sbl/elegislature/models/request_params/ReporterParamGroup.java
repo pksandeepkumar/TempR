@@ -36,6 +36,7 @@ public class ReporterParamGroup {
             this.createdOn = group.getCreatedOn();
             this.groupLeaderId = group.getGroupLeaderIds();
             this.groupTypeId = group.getGroupTypeIds();
+            System.err.println("ReporterParamGroup group.getId():" + group.getId());
             if( group.getId() != 0)
                 this.id = group.getId();
             this.isActive = true;

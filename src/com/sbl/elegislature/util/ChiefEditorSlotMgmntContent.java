@@ -6,7 +6,7 @@
 package com.sbl.elegislature.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbl.elegislature.data.SaveSlots;
+import com.sbl.elegislature.data.SaveSlot;
 import com.sbl.elegislature.data.Slot;
 import com.sbl.elegislature.data.groups.Group;
 import com.sbl.elegislature.data.groups.GroupType;
@@ -150,8 +150,8 @@ public class ChiefEditorSlotMgmntContent extends BorderPane {
         alert.showAndWait();
     }
 
-    private SaveSlots mapSaveSlots(Slot slot) {
-        SaveSlots s = new SaveSlots();
+    private SaveSlot mapSaveSlots(Slot slot) {
+        SaveSlot s = new SaveSlot();
         s.setCreatedBy(slot.getCreated_By());
         s.setCreatedOn(slot.getCreatedOn());
         s.setGroup_id(slot.getGroup_id());

@@ -5,7 +5,6 @@
  */
 package com.sbl.elegislature.data.reporterusers;
 
-
 import java.util.Date;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -31,8 +30,7 @@ public class GroupMembers {
     private String name;
     private Integer created_By;
     private Integer modified_By;
-    
-    
+
     public int getGroupLeaderId() {
         return groupLeaderId;
     }
@@ -75,41 +73,39 @@ public class GroupMembers {
     private Integer SessionDateId;
     private boolean status;
 
-    public GroupMembers()
-    {
-        
+    public GroupMembers() {
+
     }
-    
-    public GroupMembers(int id,String name,int level,int groupId)
-    {
-        this.id=id;
-        this.name=name;
-        this.level=level;
-        this.groupId=groupId;
+
+    public GroupMembers(int id, String name, int level, int groupId) {
+        this.id = id;
+        this.name = name;
+        this.level = level;
+        this.groupId = groupId;
     }
-    
-        public GroupMembers(int id,String name,int level,int groupId, String groupTypeName)
-    {
-        this.id=id;
-        this.name=name;
-        this.level=level;
-        this.groupId=groupId;
-        this.groupTypeName=groupTypeName;
+
+    public GroupMembers(int id, String name, int level, int groupId, String groupTypeName, int employeeId) {
+        this.id = id;
+        this.name = name;
+        this.level = level;
+        this.groupId = groupId;
+        this.groupTypeName = groupTypeName;
+        this.employeeId = employeeId;
     }
-    public GroupMembers(int id,String name)
-    {
-        this.employeeId=id;
-        this.name=name;
-       
+
+    public GroupMembers(int id, String name) {
+        this.employeeId = id;
+        this.name = name;
+
     }
+
     public void setName() {
         name = firstName + " " + lastName;
     }
-    
-        public void setNames(String name) {
-        this.name=name;
-    }
 
+    public void setNames(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -210,9 +206,6 @@ public class GroupMembers {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-   
-
 
 //    private final SimpleStringProperty id;
 //     private final SimpleStringProperty name;

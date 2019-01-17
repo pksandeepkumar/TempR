@@ -9,13 +9,16 @@ package com.sbl.elegislature.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbl.elegislature.login.UserDetails;
 import com.sbl.elegislature.models.pojo.assembly.GetActiveAssemblyPOJO;
+import com.sbl.elegislature.models.pojo.businestype.GetAllBusinesTypePOJO;
 import com.sbl.elegislature.models.pojo.group_member.GroupMemberPOJO;
 import com.sbl.elegislature.models.pojo.grouptype.GroupTypePOJO;
 import com.sbl.elegislature.models.pojo.language.GetAllLanguagePOJO;
+import com.sbl.elegislature.models.pojo.members.GetAllMembersPOJO;
 import com.sbl.elegislature.models.pojo.reporterusers.GetAllUsersPOJO;
 import com.sbl.elegislature.models.pojo.save_group.SaveGroupResponsePOJO;
 import com.sbl.elegislature.models.pojo.session.GetAllSessionsPOJO;
 import com.sbl.elegislature.models.pojo.sessiondate.GetAllSessionDatePOJO;
+import com.sbl.elegislature.models.pojo.timeslots.GetAllTimeSlotsPOJO;
 import com.sbl.elegislature.models.pojo.user.GetCurrentUserPOJO;
 import static com.sbl.elegislature.util.AppContext.APPLICATION_PROPERTIES;
 import static com.sbl.elegislature.util.AppContext.serviceClient;
@@ -200,6 +203,40 @@ public class GeneralService {
         }
         return null;
     }
+    
+    public GetAllMembersPOJO getMembers() {
+        try {
+            String getResponse = serviceClient().doGetRequest("member-assembly/get-all-members");
+            GetAllMembersPOJO respObject = new ObjectMapper().readValue(getResponse, GetAllMembersPOJO.class);
+            return respObject;
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+        return null;
+    }
+    
+    public GetAllBusinesTypePOJO getBusinessType() {
+        try {
+            String getResponse = serviceClient().doGetRequest("business-type/get-buiness-type");
+            GetAllBusinesTypePOJO respObject = new ObjectMapper().readValue(getResponse, GetAllBusinesTypePOJO.class);
+            return respObject;
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+        return null;
+    }
+    
+    public GetAllTimeSlotsPOJO getAllTimeSlots(int sessionId) {
+        try {
+            String getResponse = serviceClient().doGetRequest("reporter/get-slot-list?sessionDateId=" + sessionId);
+            GetAllTimeSlotsPOJO respObject = new ObjectMapper().readValue(getResponse, GetAllTimeSlotsPOJO.class);
+            return respObject;
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+        return null;
+    }
+    
     
     public Object saveGroup(int assemblyId) {
         try {

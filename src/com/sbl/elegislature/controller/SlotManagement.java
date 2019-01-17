@@ -6,7 +6,7 @@
 package com.sbl.elegislature.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbl.elegislature.data.SaveSlots;
+import com.sbl.elegislature.data.SaveSlot;
 import com.sbl.elegislature.data.Slot;
 import com.sbl.elegislature.util.EditCell;
 import java.sql.Time;
@@ -138,8 +138,8 @@ public class SlotManagement extends Application {
         alert.showAndWait();
     }
 
-    private SaveSlots mapSaveSlots(Slot slot) {
-        SaveSlots s = new SaveSlots();
+    private SaveSlot mapSaveSlots(Slot slot) {
+        SaveSlot s = new SaveSlot();
         s.setCreatedBy(slot.getCreated_By());
         s.setCreatedOn(slot.getCreatedOn());
         s.setGroup_id(slot.getGroup_id());

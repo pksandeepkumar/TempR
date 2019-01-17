@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbl.elegislature.data.Language;
 import com.sbl.elegislature.data.assembly.Assembly;
 import com.sbl.elegislature.data.assembly.SessionDate;
+import com.sbl.elegislature.data.groups.Group;
 import com.sbl.elegislature.login.UserLogin;
 import static com.sbl.elegislature.service.GeneralService.generalServiceInstance;
 import com.sbl.elegislature.util.AppContext;
@@ -39,14 +40,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import com.sbl.elegislature.util.GroupManagementContent;
+import com.sbl.elegislature.views.GroupManagementWindow;
 import com.sbl.elegislature.util.ChiefEditorSlotMgmntContent;
 import com.sbl.elegislature.util.CustomHTMLEditor;
 import com.sbl.elegislature.util.Dockbar;
 import com.sbl.elegislature.util.EditorSectionDockbarContent;
+import com.sbl.elegislature.views.EditorWindow;
 import com.sbl.elegislature.views.LeftSideDockbar;
-import com.sbl.elegislature.util.SidebarContent;
-import com.sbl.elegislature.views.SlotCreationView;
+import com.sbl.elegislature.views.EditorWindowSideBar;
+import com.sbl.elegislature.views.SlotManagementWindow;
+import com.sbl.elegislature.views.baseviews.BaseWindow;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +57,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 
 /**
@@ -61,8 +65,11 @@ import javafx.stage.Modality;
  * @author bipin
  */
 public class ReporterApp extends Application {
-
-    BorderPane editorWindow, groupMgmntWindow, slotMgmntWindow;
+    
+    EditorWindow editorWindow;
+    GroupManagementWindow  groupManagementWindow;
+    SlotManagementWindow slotManagementWindow;
+    
     Dockbar slotSectionDockbar;
 
     ObjectMapper mapper;
@@ -75,12 +82,12 @@ public class ReporterApp extends Application {
 
         this.stage = stage;
 
-        editorWindow = createEditorWindow();
-        groupMgmntWindow = createChiefEditorGroupMgmntWindow();
-        slotMgmntWindow = createChiefEditorSlotMgmntWindow();
+        editorWindow = new EditorWindow();
+        groupManagementWindow = new GroupManagementWindow();
+        slotManagementWindow = new SlotManagementWindow(800);
 
         mainCointainer = new StackPane();
-        setEditorView();
+        showEditorWindow();
         
         slotSectionDockbar = createSlotSectionDockPane();
         BorderPane middlePane = new BorderPane();
@@ -116,24 +123,31 @@ public class ReporterApp extends Application {
     }
     
     private void clearWindowPanels() {
+        editorWindow.hideWindow();
+        groupManagementWindow.hideWindow();
+        slotManagementWindow.hideWindow();
         mainCointainer.getChildren().clear();
     }
     
-    private void setEditorView() {
+    private void showEditorWindow() {
         clearWindowPanels();
+        editorWindow.showWindow();
         mainCointainer.getChildren().add(editorWindow);
+        editorWindow.refreshWindow();
     }
     
-    private void setGroupManagemenView() {
+    private void showGroupManagementWindow() {
         clearWindowPanels();
-        groupMgmntWindow.setVisible(true);
-        mainCointainer.getChildren().add(groupMgmntWindow);
+        groupManagementWindow.showWindow();
+        mainCointainer.getChildren().add(groupManagementWindow);
+        groupManagementWindow.refreshWindow();
     }
     
-    private void setSlotManagementView() {
+    private void showSlotManagementWindow() {
         clearWindowPanels();
-        slotMgmntWindow.setVisible(true);
-        mainCointainer.getChildren().add(slotMgmntWindow);
+        slotManagementWindow.showWindow();
+        mainCointainer.getChildren().add(slotManagementWindow);
+        slotManagementWindow.refreshWindow();
     }
     
 
@@ -154,12 +168,12 @@ public class ReporterApp extends Application {
 
             MenuItem mmnuItmGroupMgmnt = new MenuItem("Group Management");
             mmnuItmGroupMgmnt.setOnAction(e -> {
-                setGroupManagemenView();
+                showGroupManagementWindow();
             });
 
             MenuItem mmnuItmSlotMgmnt = new MenuItem("Slot Management");
             mmnuItmSlotMgmnt.setOnAction(e -> {
-                setSlotManagementView();
+                showSlotManagementWindow();
             });
 
             mmnuConfiguration.getItems().add(mmnuItmGroupMgmnt);
@@ -171,7 +185,7 @@ public class ReporterApp extends Application {
         MenuItem mmnuItmEditor = new MenuItem("Editor Window");
         mmnuItmEditor.setOnAction(e -> {
             System.out.println("Editor Window clicked!!");
-            setEditorView();
+            showEditorWindow();
         });
 
         MenuItem mmnuItmExit = new MenuItem("Exit");
@@ -211,59 +225,27 @@ public class ReporterApp extends Application {
         return menuBar;
     }
 
-    private void openGroupManagement() {
-        groupMgmntWindow.setVisible(true);
-        groupMgmntWindow = createChiefEditorGroupMgmntWindow();
-
-    }
-
-    private void openSlotManagement() {
-        slotMgmntWindow = createChiefEditorSlotMgmntWindow();
-    }
-
-    private void openEditorWindow() {
-        editorWindow = createEditorWindow();
-    }
-
-    private BorderPane createChiefEditorGroupMgmntWindow() {
-        return new GroupManagementContent();
-    }
-
-    private BorderPane createChiefEditorSlotMgmntWindow() {
-        return new SlotCreationView(800);
-    }
-
-    private BorderPane createEditorWindow() {
-        String[] businessTypeList = {"Type 1", "Type 2", "Type 3", "Type 4", "Type 5"};
-        String[] memberList = {"Member 1", "Member 2", "Member 3", "Member 4", "Member 5"};
-        BorderPane editorPane = new BorderPane();
-        CustomHTMLEditor customHTMLEditor = new CustomHTMLEditor();
-        
-        editorPane.setCenter(customHTMLEditor);
-        BorderPane mainPane = new BorderPane();
-        mainPane.setCenter(editorPane);
-        mainPane.setLeft(createSideBar(businessTypeList, memberList));
-        //mainPkane.setVisible(false);
-        return mainPane;
-    }
-
     private Dockbar createSlotSectionDockPane() {
         LeftSideDockbar sideBarContent = new LeftSideDockbar();
         sideBarContent.setOnSessionDateSelecListner(new LeftSideDockbar.OnSessionDateSelecListner() {
             @Override
             public void onSessionDateSelecListner() {
-                ((GroupManagementContent)groupMgmntWindow).reloadFromSever();
+                if(groupManagementWindow.isShowing) {
+                    groupManagementWindow.refreshWindow();
+                }
+                
+                if(editorWindow.isShowing) {
+//                    groupManagementWindow.reloadFromSever();
+                }
+                
+                if(slotManagementWindow.isShowing) {
+//                    groupManagementWindow.reloadFromSever();
+                }
             }
         });
         Dockbar sidebar = new Dockbar(250, sideBarContent);
         VBox.setVgrow(sideBarContent, Priority.ALWAYS);
         return sidebar;
-    }
-
-    private SidebarContent createSideBar(String[] businessType, String[] memberList) {
-        SidebarContent sb = new SidebarContent(businessType, memberList);
-        sb.setMaxWidth(300);
-        return sb;
     }
 
 

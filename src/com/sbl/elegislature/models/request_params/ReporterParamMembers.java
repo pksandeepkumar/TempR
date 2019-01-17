@@ -26,11 +26,14 @@ public class ReporterParamMembers {
     Date modifiedOn;
 
     public ReporterParamMembers(GroupMembers groupMember) {
-        if( groupMember.getId() != 0)
+        if (groupMember.getId() != 0) {
             this.id = groupMember.getId();
-        if(groupMember.getGroupId() != 0)
-        this.groupId = groupMember.getGroupId();
-        
+        }
+        if (groupMember.getGroupId() != 0) {
+            this.groupId = groupMember.getGroupId();
+        }
+        System.err.println("===============================================");
+        System.err.println("============groupMember.getEmployeeId()=========" + groupMember.getEmployeeId());
         this.employeeId = groupMember.getEmployeeId();
         this.supervisorId = groupMember.getSessionDateId();
         this.level = groupMember.getLevel();
@@ -40,8 +43,6 @@ public class ReporterParamMembers {
         this.modifiedOn = groupMember.getModifiedOn();
     }
 
-    
-    
     public Integer getId() {
         return id;
     }
@@ -113,7 +114,5 @@ public class ReporterParamMembers {
     public void setModifiedOn(Date modifiedOn) {
         this.modifiedOn = modifiedOn;
     }
-    
-    
 
 }

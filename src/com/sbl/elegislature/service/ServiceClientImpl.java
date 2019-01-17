@@ -96,15 +96,16 @@ public class ServiceClientImpl implements ServiceClient{
     public String doPostRequest(String route, String json) {
           String doPostRequest = "";
         try {
-            System.err.println("Param:" + json);
+            System.err.println("POST----------Param:" + json);
             RequestBody body = RequestBody.create(JSON, json);
             Request request = new Request.Builder().addHeader("Authorization", "Bearer " + bearerToken)
                     .url(BASE_URL + route)
                     .post(body)
                     .build();
             Response response = clientInstance.newCall(request).execute();
-
+            System.err.println("POST----------response:" + response);
             doPostRequest = response.body().string();
+            System.err.println("POST----------doPostRequest:" + doPostRequest);
         } catch (IOException ex) {
             Logger.getLogger(ServiceClientImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
