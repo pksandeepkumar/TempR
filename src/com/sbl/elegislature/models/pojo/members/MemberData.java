@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "fps",
     "username"
 })
-public class Datum {
+public class MemberData {
 
     @JsonProperty("id")
     private Integer id;
@@ -210,5 +210,12 @@ public class Datum {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
+    @Override
+    public String toString() {
+        return name; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 
 }

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class GetAllMembersPOJO {
 
     @JsonProperty("data")
-    private List<Datum> data = null;
+    private List<MemberData> data = null;
     @JsonProperty("hasError")
     private Boolean hasError;
     @JsonProperty("hasDuplicate")
@@ -29,12 +29,12 @@ public class GetAllMembersPOJO {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("data")
-    public List<Datum> getData() {
+    public List<MemberData> getData() {
         return data;
     }
 
     @JsonProperty("data")
-    public void setData(List<Datum> data) {
+    public void setData(List<MemberData> data) {
         this.data = data;
     }
 

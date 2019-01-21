@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="ReporterApp.jar" size="1061447" download="eager" />
+    <jar href="ReporterApp.jar" size="1068979" download="eager" />
     <jar href="lib/commons-io-2.4.jar" size="185140" download="eager" />
     <jar href="lib/jackson-annotations-2.5.4.jar" size="39822" download="eager" />
     <jar href="lib/jackson-core-2.5.4 (1).jar" size="229999" download="eager" />

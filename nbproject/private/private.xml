@@ -7,6 +7,9 @@
             <file>file:/D:/Bipin/Learn/Java/ReporterApp/src/com/sbl/elegislature/ReporterApp.java</file>
             <file>file:/D:/Bipin/Learn/Java/ReporterApp/src/com/sbl/elegislature/util/SidebarContent.java</file>
         </group>
-        <group/>
+        <group>
+            <file>file:/home/sandeep/SVN/source/ReporterApp/src/com/sbl/elegislature/views/controlls/TimeSlotEntry.java</file>
+            <file>file:/home/sandeep/SVN/source/ReporterApp/src/com/sbl/elegislature/views/SlotManagementWindow.java</file>
+        </group>
     </open-files>
 </project-private>

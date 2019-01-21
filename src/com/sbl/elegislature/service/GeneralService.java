@@ -204,7 +204,7 @@ public class GeneralService {
         return null;
     }
     
-    public GetAllMembersPOJO getMembers() {
+    public GetAllMembersPOJO getAllMembers() {
         try {
             String getResponse = serviceClient().doGetRequest("member-assembly/get-all-members");
             GetAllMembersPOJO respObject = new ObjectMapper().readValue(getResponse, GetAllMembersPOJO.class);

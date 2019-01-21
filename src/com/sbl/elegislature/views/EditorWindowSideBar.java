@@ -20,10 +20,20 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import com.sbl.elegislature.data.MemberDiscussion;
+import com.sbl.elegislature.models.pojo.businestype.BusinessTypeData;
+import com.sbl.elegislature.models.pojo.businestype.GetAllBusinesTypePOJO;
+import com.sbl.elegislature.models.pojo.members.GetAllMembersPOJO;
+import com.sbl.elegislature.models.pojo.members.MemberData;
+import com.sbl.elegislature.service.GeneralService;
 import com.sbl.elegislature.util.MaskedTextField;
 import com.sbl.elegislature.util.MediaControl;
+import static com.sbl.elegislature.views.controlls.TimePicker.AM;
+import static com.sbl.elegislature.views.controlls.TimePicker.PM;
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -38,20 +48,34 @@ import javafx.scene.text.Text;
 
 public class EditorWindowSideBar extends SplitPane {
 
-    private final TableView table;
-    private final ObservableList<MemberDiscussion> data;
-    private Button newButton, saveNewButton, saveButton, resetButton, previousButton, nextButton, startButton, endButton;
-    private MaskedTextField startTime, endTime;
-    private ObservableList<String> businessTypeEntries = FXCollections.observableArrayList(), 
-            memberTypeEntries = FXCollections.observableArrayList();
-    private ListView listBusinessType = new ListView(), listMemberType = new ListView();
+    private final TableView tableMemberDiscussion;
 
-    public EditorWindowSideBar(String[] businessType, String[] memberList) {
-        data = FXCollections.observableArrayList();
-        table = new TableView();
+    private final ObservableList<MemberDiscussion> memberDiscussiondata;
+
+    private Button btnButton, btnSaveNew, btnSave /*, resetButton */, btnPrevious, btnNext, btnStart, btnEnd;
+
+    private MaskedTextField startTime, endTime;
+
+    private ObservableList<BusinessTypeData> businessTypeList = FXCollections.observableArrayList();
+    private ObservableList<MemberData> memberList = FXCollections.observableArrayList();
+
+    private ListView listViewBusinessType = new ListView();
+    private ListView listViewMemberType = new ListView();
+
+    public MemberData selectdMemer;
+    public BusinessTypeData selectedBusinessType;
+    
+    MediaPlayer mediaPlayer;
+
+    public EditorWindowSideBar(String[] businessType, String[] memberList1) {
+
+        memberDiscussiondata = FXCollections.observableArrayList();
+
+        tableMemberDiscussion = new TableView();
+
         setOrientation(Orientation.VERTICAL);
 
-        getItems().addAll(createSessionContent(), createTools(businessType, memberList), createMediaplayer());
+        getItems().addAll(createSessionContent(), createBusinessTypeMemberListView(businessType, memberList1), createMediaplayer());
         setDividerPositions(0.3f, 0.35f, 0.35f);
         setWidth(300);
     }
@@ -71,47 +95,107 @@ public class EditorWindowSideBar extends SplitPane {
         endTimeCol.setMinWidth(100);
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
 
-        table.setItems(data);
-        table.setEditable(true);
-        table.getColumns().addAll(memberNameCol, startTimeCol, endTimeCol);
+        tableMemberDiscussion.setItems(memberDiscussiondata);
+        tableMemberDiscussion.setEditable(true);
+        tableMemberDiscussion.getColumns().addAll(memberNameCol, startTimeCol, endTimeCol);
 
-        bp.setCenter(table);
+        bp.setCenter(tableMemberDiscussion);
         return bp;
     }
 
     private MediaControl createMediaplayer() {
 
-        String mediaURL = "http://192.168.6.51:8082/files/downloadFile/72b3f31c-ca0d-4fb4-8dd7-36b17e1177d8.mp4"; //this.getClass().getClassLoader().getResource("resources/media/blank.mov").toExternalForm();
+        String mediaURL = "http://192.168.6.51:8082/files/downloadFile/72b3f31c-ca0d-4fb4-8dd7-36b17e1177d8.mp4";
+//this.getClass().getClassLoader().getResource("resources/media/blank.mov").toExternalForm();
 //        Media media = new Media(new File(mediaURL).toURI().toString());
         Media media = new Media(mediaURL);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        
+        mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
+        
+        
+        
         return new MediaControl(mediaPlayer);
     }
 
-    private GridPane createTools(String[] businessType, String[] memberList) {
+    public void refresh() {
 
-        newButton = makeNavigationButton("new", "New");
-        saveNewButton = makeNavigationButton("savenew", "Save & New");
-        saveButton = makeNavigationButton("save", "Save");
-        resetButton = makeNavigationButton("reset", "Reset");
-        previousButton = makeNavigationButton("previous", "Previous Discussion");
-        nextButton = makeNavigationButton("next", "Next Discussion");
+    }
+    
+    private String getTime() {
+        int minutes = (int) mediaPlayer.getCurrentTime().toMinutes() % 60;
+        int seconds = (int) mediaPlayer.getCurrentTime().toSeconds() % 60;
+        return setPadding(minutes) + ":" + setPadding(seconds);
+    }
+    
+    public String setPadding( int value) {
+        if(value < 10) return "0"+value;
+        return ""+value;
+    }
 
-        startButton = new Button("...");
-        endButton = new Button("...");
+    private GridPane createBusinessTypeMemberListView(String[] businessType, String[] memberList1) {
+
+        btnButton = makeNavigationButton("new", "New");
+        btnButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("btnButton");
+            }
+        });
+        
+        btnSaveNew = makeNavigationButton("savenew", "Save & New");
+        btnSaveNew.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("btnSaveNew");
+            }
+        });
+        
+        btnSave = makeNavigationButton("save", "Save");
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("btnSave");
+            }
+        });
+        
+//        resetButton = makeNavigationButton("reset", "Reset");
+        btnPrevious = makeNavigationButton("previous", "Previous Discussion");
+        btnNext = makeNavigationButton("next", "Next Discussion");
+
+        btnStart = new Button("...");
+        btnStart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startTime.setText(getTime());
+            }
+        });
+        
+        btnEnd = new Button("...");
+        btnEnd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                endTime.setText(getTime());
+            }
+        });
+        
         startTime = new MaskedTextField();
-        startTime.setMask("##:##:## UM");
+//        startTime.setMask("##:##:## UM");
         startTime.setPlaceholder("_");
-        startTime.setMaxWidth(80);
-        startTime.setMinWidth(50);
-        startTime.setPrefWidth(80);
+        startTime.setMaxWidth(55);
+        startTime.setMinWidth(55);
+        startTime.setPrefWidth(55);
+        startTime.setEditable(false);
+        
         endTime = new MaskedTextField();
-        endTime.setMask("##:##:## UM");
+//        endTime.setMask("##:##:## UM");
         endTime.setPlaceholder("_");
-        endTime.setMaxWidth(80);
-        endTime.setMinWidth(50);
-        endTime.setPrefWidth(80);
+        endTime.setMaxWidth(55);
+        endTime.setMinWidth(55);
+        endTime.setPrefWidth(55);
+        endTime.setEditable(false);
+        
+        
         GridPane gridPane = new GridPane();
         //toolbar.getItems().addAll(newButton,saveNewButton,saveButton,resetButton);
         //GridPane gridPane=new GridPane();
@@ -122,17 +206,17 @@ public class EditorWindowSideBar extends SplitPane {
         gridPane.setHgap(2);
         gridPane.setVgap(2);
 
-        gridPane.add(newButton, 0, 0);
-        gridPane.add(saveNewButton, 1, 0);
-        gridPane.add(saveButton, 2, 0);
-        gridPane.add(resetButton, 3, 0);
-        gridPane.add(previousButton, 4, 0);
-        gridPane.add(nextButton, 5, 0);
+        gridPane.add(btnButton, 0, 0);
+        gridPane.add(btnSaveNew, 1, 0);
+        gridPane.add(btnSave, 2, 0);
+//        gridPane.add(resetButton, 3, 0);
+        gridPane.add(btnPrevious, 4, 0);
+        gridPane.add(btnNext, 5, 0);
         gridPane.add(startTime, 6, 0);
-        gridPane.add(startButton, 7, 0);
+        gridPane.add(btnStart, 7, 0);
         gridPane.add(new Text(" to "), 8, 0);
         gridPane.add(endTime, 9, 0);
-        gridPane.add(endButton, 10, 0);
+        gridPane.add(btnEnd, 10, 0);
         gridPane.add(new Text(" Business Type "), 0, 1, 5, 1);
         gridPane.add(new Text(" Member "), 6, 1, 5, 1);
 
@@ -140,49 +224,107 @@ public class EditorWindowSideBar extends SplitPane {
         txtBusinessSearch.setPromptText("Search");
         txtBusinessSearch.textProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue observable, Object oldVal, Object newVal) {
-                searchEntries((String) oldVal, (String) newVal, listBusinessType, businessTypeEntries);
+                searchBusinessTypeEntries((String) oldVal, (String) newVal, listViewBusinessType, businessTypeList);
             }
         });
-        listBusinessType.setMinHeight(140);
-        listBusinessType.setPrefHeight(140);
-        listBusinessType.setMaxHeight(180);
 
-        businessTypeEntries.addAll(businessType);
-        listBusinessType.setItems(businessTypeEntries);
+        listViewBusinessType.setMinHeight(140);
+        listViewBusinessType.setPrefHeight(140);
+        listViewBusinessType.setMaxHeight(180);
+
+        businessTypeList.addAll(fetchBusinssTypeList());
+        listViewBusinessType.setItems(businessTypeList);
+        listViewBusinessType.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<BusinessTypeData>() {
+                    @Override
+                    public void changed(ObservableValue<? extends BusinessTypeData> observable,
+                            BusinessTypeData oldValue, BusinessTypeData newValue) {
+
+                        selectedBusinessType = newValue;
+                        System.out.println("Selected item: " + newValue + "  " + newValue.getId());
+                    }
+                });
+
         gridPane.add(txtBusinessSearch, 0, 2, 6, 1);
-        gridPane.add(listBusinessType, 0, 3, 6, 1);
+        gridPane.add(listViewBusinessType, 0, 3, 6, 1);
 
         TextField txtMemberSearch = new TextField();
         txtMemberSearch.setPromptText("Search");
         txtMemberSearch.textProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue observable, Object oldVal, Object newVal) {
-                searchEntries((String) oldVal, (String) newVal, listMemberType, memberTypeEntries);
+                searchMemberEntries((String) oldVal, (String) newVal, listViewMemberType, memberList);
             }
         });
-        listMemberType.setMaxHeight(180);
-        listMemberType.setPrefHeight(140);
-        listMemberType.setMaxHeight(180);
 
-        memberTypeEntries.addAll(memberList);
-        listMemberType.setItems(memberTypeEntries);
+        listViewMemberType.setMaxHeight(180);
+        listViewMemberType.setPrefHeight(140);
+        listViewMemberType.setMaxHeight(180);
+
+        this.memberList.addAll(fetchMembersList());
+        listViewMemberType.setItems(this.memberList);
+
+        listViewMemberType.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<MemberData>() {
+
+                    @Override
+                    public void changed(ObservableValue<? extends MemberData> observable, 
+                            MemberData oldValue, MemberData newValue) {
+                        
+                        selectdMemer = newValue;
+                        System.out.println("Selected item: " + newValue + "  " + newValue.getId());
+                    }
+                });
+
         gridPane.add(txtMemberSearch, 6, 2, 5, 1);
-        gridPane.add(listMemberType, 6, 3, 5, 1);
+        gridPane.add(listViewMemberType, 6, 3, 5, 1);
 
         return gridPane;
     }
 
-    public void searchEntries(String oldVal, String newVal, ListView list, ObservableList<String> entries) {
-        if (oldVal != null && (newVal.length() < oldVal.length())) {
-            list.setItems(entries);
+    private List<BusinessTypeData> fetchBusinssTypeList() {
+        GetAllBusinesTypePOJO getAllBusinesTypePOJO = GeneralService.generalServiceInstance().getBusinessType();
+        if (getAllBusinesTypePOJO != null) {
+            return getAllBusinesTypePOJO.getData();
         }
+        return null;
+    }
+
+    private List<MemberData> fetchMembersList() {
+        GetAllMembersPOJO getAllMembersPOJO = GeneralService.generalServiceInstance().getAllMembers();
+        if (getAllMembersPOJO != null) {
+            return getAllMembersPOJO.getData();
+        }
+        return null;
+    }
+
+    public void searchMemberEntries(String oldVal, String newVal, ListView list,
+            ObservableList<MemberData> entries) {
         String value = newVal.toUpperCase();
-        ObservableList<String> subentries = FXCollections.observableArrayList();
-        for (Object entry : list.getItems()) {
+
+        ObservableList<MemberData> subentries = FXCollections.observableArrayList();
+        for (MemberData entry : memberList) {
             boolean match = true;
-            String entryText = (String) entry;
-            if (!entryText.toUpperCase().contains(value)) {
+            MemberData entryText = entry;
+            if (!entryText.toString().toUpperCase().contains(value)) {
                 match = false;
-                break;
+            }
+            if (match) {
+                subentries.add(entryText);
+            }
+        }
+        list.setItems(subentries);
+    }
+
+    public void searchBusinessTypeEntries(String oldVal, String newVal, ListView list,
+            ObservableList<BusinessTypeData> entries) {
+        String value = newVal.toUpperCase();
+
+        ObservableList<BusinessTypeData> subentries = FXCollections.observableArrayList();
+        for (BusinessTypeData entry : businessTypeList) {
+            boolean match = true;
+            BusinessTypeData entryText = entry;
+            if (!entryText.toString().toUpperCase().contains(value)) {
+                match = false;
             }
             if (match) {
                 subentries.add(entryText);

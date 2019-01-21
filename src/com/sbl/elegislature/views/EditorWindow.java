@@ -26,8 +26,10 @@ public class EditorWindow extends BaseWindow {
     }
 
     private void initViews() {
+        
         String[] businessTypeList = {"Type 1", "Type 2", "Type 3", "Type 4", "Type 5"};
         String[] memberList = {"Member 1", "Member 2", "Member 3", "Member 4", "Member 5"};
+        
         BorderPane editorPane = new BorderPane();
         CustomHTMLEditor customHTMLEditor = new CustomHTMLEditor();
 
